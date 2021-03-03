@@ -1,0 +1,25 @@
+version: "3.2"
+
+services:
+  postgres:
+    image: postgres:12.3
+    ports:
+      - 5432:5432
+    env_file:
+      - ./container/.env_vars
+    restart: unless-stopped
+
+  mlflow:
+    build:
+      context: .
+      dockerfile: ./container/Dockerfile
+    container_name: mlflow
+    env_file:
+      - ./container/.env_vars
+    ports:
+      - "8081:8081"
+      - "5000:5000"
+    volumes:
+      - ./src:/opt/mlflow
+    restart: unless-stopped
+    command: sh /run.sh
