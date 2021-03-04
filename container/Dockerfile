@@ -14,21 +14,16 @@ COPY container/requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt \
     && rm -rf requirements.txt
 
+ENV MLFLOW_ARTIFACT_STORE /opt/mlflow_artifact
+RUN mkdir -p ${MLFLOW_ARTIFACT_STORE} && \
+    mkdir -p /main
 
-ENV MLFLOW_HOME /opt/mlflow
-ENV FILE_STORE ${MLFLOW_HOME}/fileStore
-ENV ARTIFACT_STORE ${MLFLOW_HOME}/artifactStore
-
-RUN mkdir -p ${FILE_STORE} && \
-    mkdir -p ${ARTIFACT_STORE}
-
-RUN mkdir -p /main
-COPY ./src ${MLFLOW_HOME}
+COPY ./src /main
 
 COPY ./container/run.sh /run.sh
 RUN chmod 777 /run.sh
 
-RUN chmod -R 777 ${MLFLOW_HOME}
-WORKDIR ${MLFLOW_HOME}
+RUN chmod -R 777 /main
+WORKDIR /main
 
 # ENTRYPOINT ["./run.sh"]

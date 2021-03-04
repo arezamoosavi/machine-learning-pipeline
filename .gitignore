@@ -110,6 +110,3 @@ pip-selfcheck.json
 .ipynb_checkpoints/
 
 .vscode
-
-
-src/mlruns
